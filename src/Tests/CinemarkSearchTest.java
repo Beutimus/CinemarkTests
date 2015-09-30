@@ -4,7 +4,8 @@ package Tests;
 import java.io.File;
 import java.util.List;
 
-import org.junit.*;
+import org.testng.annotations.*;
+import org.testng.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
@@ -21,7 +22,7 @@ public class CinemarkSearchTest {
 	
 	private final String cinemarkHomePageURL = "http://www.cinemark.com/";
 	
-	@Before
+	@BeforeClass
 	public void setUp() throws Exception {
 		driver = new FirefoxDriver();		
 	}
@@ -36,7 +37,7 @@ public class CinemarkSearchTest {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			Assert.assertFalse("Unable to open file", true);
+			Assert.assertEquals(false, true, "Unable to open file");
 		}		
 		
 		Sheet sheet = test.getSheet(0);
@@ -55,7 +56,7 @@ public class CinemarkSearchTest {
 		// Verify we are on the right page
 		String currentTitle = driver.getTitle();
 		
-		Assert.assertTrue(currentTitle.equals(theatres.getTitle()));
+		Assert.assertEquals(currentTitle, theatres.getTitle(), "This isn't the right page title");
 		
 		// Get list of theatres
 		List<String> theatreList = theatres.getTheatres();
@@ -78,7 +79,7 @@ public class CinemarkSearchTest {
 		
 	}
 	
-	@After
+	@AfterClass
 	public void tearDown() throws Exception {
 	    driver.quit();
 	}

@@ -29,5 +29,21 @@
   		<artifactId>org.json</artifactId>
   		<version>chargebee-1.0</version>
   	</dependency>
+  	<dependency>
+  		<groupId>org.testng</groupId>
+  		<artifactId>testng</artifactId>
+  		<version>6.9.6</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.openqa.selenium</groupId>
+  		<artifactId>selenium-rc</artifactId>
+  		<version>1.0-20081010.060147</version>
+  		<type>pom</type>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.openqa.selenium.core</groupId>
+  		<artifactId>selenium-core</artifactId>
+  		<version>1.0-20080914.225453</version>
+  	</dependency>
   </dependencies>
 </project>

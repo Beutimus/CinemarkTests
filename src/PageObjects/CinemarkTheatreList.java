@@ -9,7 +9,7 @@ public class CinemarkTheatreList {
 	private final WebDriver driver;
 	
 	private final String myTitle = "Cinemark - Theatres";
-	private final String emptyList = "No theaters found based on search criteria.";
+	//private final String emptyList = "No theaters found based on search criteria.";
 	
 	// Instantiate this object and make sure we are on the correct page
 	public CinemarkTheatreList (WebDriver driver)
