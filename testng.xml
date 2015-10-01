@@ -3,7 +3,7 @@
 <suite name="Testing" verbose="1">
 	<test name="Cinemark">
 		<classes>
-			<class name="CinemarkSearchTest" />
+			<class name="Tests.CinemarkSearchTest" />
 		</classes>
 	</test>
 </suite>
