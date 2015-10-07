@@ -1,7 +1,8 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="Testing" verbose="1">
-	<test name="Cinemark">
+<suite name="Testing" verbose="1" parallel="methods" thread-count="2" >
+	<test name="Cinemark">	
+		<parameter name="searchTerm" value="Salt Lake City, UT" />
 		<classes>
 			<class name="Tests.CinemarkSearchTest" />
 		</classes>
