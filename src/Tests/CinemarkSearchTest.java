@@ -2,42 +2,57 @@ package Tests;
 
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.testng.annotations.*;
-import org.testng.*;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.net.Urls;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import Movie.MovieInfo;
 import PageObjects.CinemarkSearchFeature;
 import PageObjects.CinemarkTheatreList;
 import PageObjects.MovieDayList;
 import TestHelper.MovieListWriter;
+
+import org.testng.*;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+
 import jxl.*;
 
 public class CinemarkSearchTest {
 	
-	private RemoteWebDriver driver;
+	//private RemoteWebDriver driver;
+	List<RemoteWebDriver> activeDrivers;
 	
 	private final String cinemarkHomePageURL = "http://www.cinemark.com/";
 	
 	@BeforeClass
 	public void setUp() throws Exception {
-		DesiredCapabilities capability = DesiredCapabilities.firefox();
+		activeDrivers = new ArrayList<RemoteWebDriver>();
+		//DesiredCapabilities capability = DesiredCapabilities.firefox();
 		
-		driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), capability);
+		//driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), capability);
 		
 		//driver = new FirefoxDriver();		
 	}
 	
-	@DataProvider(name = "searchTerms")
+	@AfterClass
+	public void tearDown() throws Exception {
+		// Clean up any remaining drivers
+		for(RemoteWebDriver driver : activeDrivers)
+		{
+			if (driver != null)
+			{
+				driver.quit();
+			}
+		}
+	}
+	
+	@DataProvider(name = "searchTerms", parallel = true)
 	public static Object[][] searchTerms() {
-		return new Object[][] {{"84124"}, {"California"}};
+		return new Object[][] {{"84124"}, {"California"}, {"Idaho"}, {"Layton, UT"}, {"Washington, DC"}};
 	}
 	
 	@DataProvider(name = "brokenSearchTerms")
@@ -45,8 +60,23 @@ public class CinemarkSearchTest {
 		return new Object[][] {{"St. George, Utah"}, {"Washington DC"}};
 	}
 	
+	public RemoteWebDriver getRemoteDriver()
+	{
+		DesiredCapabilities capability = DesiredCapabilities.firefox();
+		
+		try {
+			RemoteWebDriver newDriver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), capability);
+			activeDrivers.add(newDriver);
+			return newDriver;
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	@Test
 	public void searchTest() {
+		RemoteWebDriver driver = getRemoteDriver();
 		// Load test parameters from the Excel sheet
 		Workbook test = null;
 		
@@ -95,6 +125,8 @@ public class CinemarkSearchTest {
 	@Test
 	@Parameters("searchTerm")
 	public void paramXMLTest(String searchTerm) {
+		RemoteWebDriver driver = getRemoteDriver();
+		
 		// Begin the search
 		driver.get(cinemarkHomePageURL);
 		CinemarkSearchFeature feature = new CinemarkSearchFeature(driver);
@@ -125,6 +157,8 @@ public class CinemarkSearchTest {
 	
 	@Test(dataProvider = "searchTerms")
 	public void paramDataProverTest(String searchTerm) {
+		RemoteWebDriver driver = getRemoteDriver();
+		
 		// Begin the search
 		driver.get(cinemarkHomePageURL);
 		CinemarkSearchFeature feature = new CinemarkSearchFeature(driver);
@@ -151,10 +185,5 @@ public class CinemarkSearchTest {
 		// Write out the list
 		//MovieListWriter.writeMovies(list);
 		MovieListWriter.newWrite(list);
-	}
-	
-	@AfterClass
-	public void tearDown() throws Exception {
-	    driver.quit();
 	}
 }
